@@ -7,9 +7,9 @@ from random import randint, choice
 
 # Constants
 WIDTH = 800
-HEIGHT = 500  # プレイエリアの高さ（変更なし）
-SCORE_AREA_HEIGHT = 50  # スコア表示エリアの高さ
-TOTAL_HEIGHT = HEIGHT + SCORE_AREA_HEIGHT  # 全体の高さ
+HEIGHT = 500  # Height of the play area (unchanged)
+SCORE_AREA_HEIGHT = 50  # Height of the score display area
+TOTAL_HEIGHT = HEIGHT + SCORE_AREA_HEIGHT  # Total height
 BALL_SPEED = 12
 BALL_SIZE = 20
 BALL_COLOR = (255, 255, 255)
@@ -17,7 +17,7 @@ RACKET_LENGTH = int(HEIGHT / 5)
 SWING = 9
 AI_SWING = 5
 FRAME_COLOR = (255, 255, 255)
-SCORE_AREA_COLOR = (50, 50, 50)  # 濃いグレー
+SCORE_AREA_COLOR = (50, 50, 50)  # Dark gray
 
 
 class Ball:
@@ -42,7 +42,7 @@ class Ball:
     def reset(self):
         """Reset the ball to the center of the play area"""
         self.rect.left = int(WIDTH / 2)
-        self.rect.top = int(SCORE_AREA_HEIGHT + HEIGHT / 2)  # スコア表示エリアを考慮
+        self.rect.top = int(SCORE_AREA_HEIGHT + HEIGHT / 2)  # Considering the score display area
         self.direction = choice([randint(50, 70), randint(110, 130), randint(230, 250), randint(290, 310)])
         self.speed = BALL_SPEED
 
@@ -87,7 +87,7 @@ class PlayerPaddle(Paddle):
     """Player controlled paddle"""
 
     def __init__(self):
-        # スコア表示エリアを考慮した初期位置
+        # Initial position considering the score display area
         x, y, width, height = 10, SCORE_AREA_HEIGHT + int((HEIGHT - RACKET_LENGTH) / 2), 10, RACKET_LENGTH
         super().__init__(x, y, width, height, (255, 255, 255))
         self.swing = SWING
@@ -95,7 +95,7 @@ class PlayerPaddle(Paddle):
     def handle_input(self, event):
         """Handle keyboard input for paddle movement"""
         if event.type == pygame.KEYDOWN:
-            # スコア表示エリアを考慮した移動範囲
+            # Movement range considering the score display area
             if event.key == pygame.K_UP and self.rect.top > SCORE_AREA_HEIGHT + 10:
                 self.rect.centery += -self.swing
             if event.key == pygame.K_DOWN and self.rect.bottom < SCORE_AREA_HEIGHT + HEIGHT - 10:
@@ -107,14 +107,14 @@ class AIPaddle(Paddle):
     """AI controlled paddle"""
 
     def __init__(self):
-        # スコア表示エリアを考慮した初期位置
+        # Initial position considering the score display area
         x, y, width, height = WIDTH - 20, SCORE_AREA_HEIGHT + int((HEIGHT - RACKET_LENGTH) / 2), 10, RACKET_LENGTH
         super().__init__(x, y, width, height, (255, 0, 0))
         self.swing = AI_SWING
 
     def update(self, ball):
         """Update AI paddle position based on ball position"""
-        # スコア表示エリアを考慮した移動範囲
+        # Movement range considering the score display area
         if self.rect.centery < ball.rect.centery and self.rect.bottom < SCORE_AREA_HEIGHT + HEIGHT - 5:
             self.rect.centery += self.swing
             if self.rect.centery < ball.rect.centery - int(HEIGHT / 8) and ball.rect.centerx > int(WIDTH / 2):
@@ -140,13 +140,13 @@ class Score:
         self.message_win = self.end_font.render('You win!', True, (255, 255, 255))
         self.message_win_pos = self.message_win.get_rect()
         self.message_win_pos.centerx = int(WIDTH / 4)
-        self.message_win_pos.centery = int(SCORE_AREA_HEIGHT + HEIGHT / 2)  # スコア表示エリアを考慮
+        self.message_win_pos.centery = int(SCORE_AREA_HEIGHT + HEIGHT / 2)  # Considering the score display area
 
         # Message when a player loses
         self.message_lose = self.end_font.render('You lose...', True, (255, 255, 255))
         self.message_lose_pos = self.message_lose.get_rect()
         self.message_lose_pos.centerx = int(WIDTH * 3 / 4)
-        self.message_lose_pos.centery = int(SCORE_AREA_HEIGHT + HEIGHT / 2)  # スコア表示エリアを考慮
+        self.message_lose_pos.centery = int(SCORE_AREA_HEIGHT + HEIGHT / 2)  # Considering the score display area
 
         # Deuce message
         self.deuce_text = self.score_font.render('Deuce', True, (255, 255, 255))
@@ -158,15 +158,15 @@ class Score:
         self.esc_text = self.score_font.render('Press ESC to exit', True, (255, 255, 255))
         self.esc_pos = self.esc_text.get_rect()
         self.esc_pos.centerx = int(WIDTH / 2)
-        self.esc_pos.centery = int(SCORE_AREA_HEIGHT + HEIGHT / 2 + 50)  # 勝利メッセージの下
+        self.esc_pos.centery = int(SCORE_AREA_HEIGHT + HEIGHT / 2 + 50)  # Below the victory message
 
         # ESC key prompt box settings
-        self.esc_box_padding = 10  # テキストの周りの余白
-        self.esc_box_color = (0, 0, 0)  # 黒色の背景
-        self.esc_box_border_color = (255, 255, 255)  # 白色の枠線
+        self.esc_box_padding = 10  # Padding around the text
+        self.esc_box_color = (0, 0, 0)  # Black background
+        self.esc_box_border_color = (255, 255, 255)  # White border
 
     def is_deuce(self):
-        """デュース状態かどうかを判定"""
+        """Determine if the game is in a deuce state"""
         return ((self.player_score >= 11 or self.ai_score >= 11) and
                 abs(self.player_score - self.ai_score) <= 1)
 
@@ -195,13 +195,13 @@ class Score:
         player_score_text = self.score_font.render('You: ' + str(self.player_score), True, (255, 255, 255))
         player_score_pos = player_score_text.get_rect()
         player_score_pos.centerx = int(WIDTH / 4)
-        player_score_pos.centery = int(SCORE_AREA_HEIGHT / 2)  # 中央に配置
+        player_score_pos.centery = int(SCORE_AREA_HEIGHT / 2)  # Centered position
 
         # AI score
         ai_score_text = self.score_font.render('Pong AI: ' + str(self.ai_score), True, (255, 255, 255))
         ai_score_pos = ai_score_text.get_rect()
         ai_score_pos.centerx = int(WIDTH * 3 / 4)
-        ai_score_pos.centery = int(SCORE_AREA_HEIGHT / 2)  # 中央に配置
+        ai_score_pos.centery = int(SCORE_AREA_HEIGHT / 2)  # Centered position
 
         # Draw scores
         surface.blit(player_score_text, player_score_pos)
@@ -214,7 +214,7 @@ class Score:
         # Draw victory messages if applicable
         if self.player_victory:
             surface.blit(self.message_win, self.message_win_pos)
-            # ESCキー促進メッセージの背景ボックスを描画
+            # Draw background box for ESC key prompt message
             esc_box = pygame.Rect(
                 self.esc_pos.left - self.esc_box_padding,
                 self.esc_pos.top - self.esc_box_padding,
@@ -222,11 +222,11 @@ class Score:
                 self.esc_pos.height + (self.esc_box_padding * 2)
             )
             pygame.draw.rect(surface, self.esc_box_color, esc_box)
-            pygame.draw.rect(surface, self.esc_box_border_color, esc_box, 2)  # 枠線を描画（太さ2ピクセル）
-            surface.blit(self.esc_text, self.esc_pos)  # ESCキー促進メッセージ
+            pygame.draw.rect(surface, self.esc_box_border_color, esc_box, 2)  # Draw border (2 pixels thick)
+            surface.blit(self.esc_text, self.esc_pos)  # ESC key prompt message
         if self.ai_victory:
             surface.blit(self.message_lose, self.message_lose_pos)
-            # ESCキー促進メッセージの背景ボックスを描画
+            # Draw background box for ESC key prompt message
             esc_box = pygame.Rect(
                 self.esc_pos.left - self.esc_box_padding,
                 self.esc_pos.top - self.esc_box_padding,
@@ -234,8 +234,8 @@ class Score:
                 self.esc_pos.height + (self.esc_box_padding * 2)
             )
             pygame.draw.rect(surface, self.esc_box_color, esc_box)
-            pygame.draw.rect(surface, self.esc_box_border_color, esc_box, 2)  # 枠線を描画（太さ2ピクセル）
-            surface.blit(self.esc_text, self.esc_pos)  # ESCキー促進メッセージ
+            pygame.draw.rect(surface, self.esc_box_border_color, esc_box, 2)  # Draw border (2 pixels thick)
+            surface.blit(self.esc_text, self.esc_pos)  # ESC key prompt message
 
 
 class Renderer:
@@ -305,7 +305,7 @@ class Game:
 
         # Game state
         self.running = True
-        self.game_over = False  # ゲーム終了フラグ
+        self.game_over = False  # Game over flag
 
     def handle_events(self):
         """Handle game events"""
@@ -315,17 +315,17 @@ class Game:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
-                # ゲーム終了時はパドル操作を無効化
+                # Disable paddle control when game is over
                 if not self.game_over:
                     self.player_paddle.handle_input(event)
 
     def update(self):
         """Update game state"""
-        # 勝利/敗北時はゲーム終了フラグをセット
+        # Set game over flag when victory/defeat occurs
         if self.score.player_victory or self.score.ai_victory:
             self.game_over = True
 
-        # ゲーム終了時は更新しない
+        # Do not update when game is over
         if self.game_over:
             return
 
